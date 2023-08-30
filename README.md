@@ -22,6 +22,8 @@ _The files in the Languages folder contain weights and frequencies for each char
 
 ## Usage
 
+Feel free to use the data in the Languages folder to generate text, or you can generate your own data using the python program. The python program will generate a file in the Languages folder with the name of the language you chose. The file will contain the data needed to generate text.
+
 ```bash
 $ pip install requests
 $ python3 .\main.py
