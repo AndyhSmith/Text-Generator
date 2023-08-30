@@ -1,6 +1,24 @@
 # Text-Generator
 
-Attempts to generate text in different languages using a simple frequency table.
+Description: Used to generate non-sense text based on simple language patterns in Wikipedia articles. This does not use LLMs or any other advanced methods, it simply uses the frequency of
+characters to generate text.
+
+Additional Notes:
+
+-   Anything generated with meaningful words is purely coincidental.
+-   When training data is limited generated text may be similar to the training data.
+-   Wikipedia articles are chosen at random, training content is not filtered.
+-   I have not run this on all languages, the python program will let you do your own training.
+
+## Files
+
+**main.py:** Main file, used to generate text.
+
+**WikipediaWPCodes.json:** Wikipedia article language codes, used to get random articles.
+
+**Languages/\***\_data.json: Training data for each language.
+
+_The files in the Languages folder contain weights and frequencies for each character in the language associated with the file. You can use those weights and frequencies to generate text._
 
 ## Usage
 

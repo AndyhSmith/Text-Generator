@@ -94,6 +94,7 @@ def waitForUserInput():
 #  Training Methods                                           #
 # ----------------------------------------------------------- #
 
+# Train on a random language
 def trainRandomLanguage():
     global selected_language
     user_input=input("How many languages do you want to train on? (Default: 5): ")
