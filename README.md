@@ -12,6 +12,8 @@ Additional Notes:
 
 ## Files
 
+**index.html:** Under Development - Used to generate text in the browser.
+
 **main.py:** Main file, used to generate text.
 
 **WikipediaWPCodes.json:** Wikipedia article language codes, used to get random articles.
