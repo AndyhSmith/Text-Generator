@@ -189,7 +189,7 @@ def saveTrainingData():
     totalChars=calcChance()
     data["stats"]["totalCharsAnalyzed"] = totalChars
     stringToSave = jsonToString()
-    file_path="./Languages/"+str(selected_language.lower())+"_data"+".json"
+    file_path="./Languages/"+str(getLanguageFileName(selected_language))+".json"
     saveToFile(file_path,stringToSave)
 
 
@@ -241,23 +241,59 @@ def generate():
         waitForUserInput()
         return
 
+    specialCharachters = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "=", "[", "]", "{", "}", "|", "\\", ";", ":", "'", "\"", ",", "<", ".", ">", "/", "?", "`", "~","\n","\t"]
+    includeSpecialChars = False
+    user_input=input("Do you want to include special characters? (Y/N) (Default: N): ")
+    if user_input.lower() == "y":
+        includeSpecialChars = True
+    
+    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    includeNumbers = False
+    user_input=input("Do you want to include numbers? (Y/N) (Default: N): ")
+    if user_input.lower() == "y":
+        includeNumbers = True
+
+    max_length=1000
+    user_input=input("What is the maximum length of the string? (Default: 1000): ")
+    if user_input.isdigit():
+        max_length=int(user_input)
+    else:
+        print("Invalid input, using default value of 100.")
+
+    # Get a random char based on the chance
     char = random.choices(list(data["firstCharWeight"].keys()), list(data["firstCharWeight"].values()))[0]
 
+    counter=0
+
     # Generate a string
-    string = ""
     while True:
-        # Get a random char based on the chance
-        char = random.choices(list(data[char]["weights"].keys()), list(data[char]["weights"].values()))[0]
-        string += char
-        if char == ".":
+        acceptable = False
+        newChar=""
+
+        acceptableAttempts=0
+        # Get an acceptable char
+        while not acceptable:
+            acceptableAttempts+=1
+            newChar = random.choices(list(data[char]["weights"].keys()), list(data[char]["weights"].values()))[0]
+            if newChar in specialCharachters and not includeSpecialChars:
+                continue
+            if newChar in numbers and not includeNumbers:
+                continue
+            if acceptableAttempts > 20:
+                newChar = random.choices(list(data["firstCharWeight"].keys()), list(data["firstCharWeight"].values()))[0]
+                break
+            acceptable = True
+        char = newChar
+        print(char, end="") 
+        counter += 1
+        if counter > max_length:
             break
-    string = string.replace("\n", " ")
-    string = string.replace("\t", " ")
-    print(string)
+        
+    print("\n")
     waitForUserInput()
 
 # ----------------------------------------------------------- #
-#  Generate Methods                                           #
+#  Language Methods                                           #
 # ----------------------------------------------------------- #
 
 def chooseLanguage():
@@ -290,6 +326,10 @@ def chooseLanguage():
         print("No language found")
         waitForUserInput()
 
+# Get the language file name
+def getLanguageFileName(selected_language):
+    return str(selected_language.lower())+"_data"
+
 
 # ----------------------------------------------------------- #
 #  Data Management Methods                                    #
@@ -300,13 +340,31 @@ def loadData():
     global data
     data={}
     dataTemp=None
-    file_path="./Languages/"+str(selected_language.lower())+"_data"+".json"
+    file_path="./Languages/"+getLanguageFileName(selected_language)+".json"
     try:
         data=loadJsonFromFile(file_path)
     except:
         print("File for language not found, creating new file.")
         createFile(file_path)
+        saveJsonOfTrainedLanguages()
         loadData()
+
+
+
+def saveJsonOfTrainedLanguages():
+    #saveToFile("trained_languages.json",jsonToString())
+    language_to_file_map={}
+    trained_languages=[]
+    for filename in os.listdir("./Languages"):
+        trained_languages.append(filename.replace(".json",""))
+
+    print(trained_languages)
+
+    for language in languages:
+        language_file_name=getLanguageFileName(language)
+        if language_file_name in trained_languages:
+            language_to_file_map[language]=language_file_name+str(".json")
+    saveToFile("trained_languages.json",json.dumps(language_to_file_map, indent=4))
 
 
 # ----------------------------------------------------------- #

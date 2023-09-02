@@ -62,3 +62,10 @@ $ python3 .\main.py
     }
 }
 ```
+
+## Future Plans
+
+-   Trim utility to remove chars that don't have much data
+-   Client website to generate text
+-   Version that looks at two chars at a time
+-   Train on only old languages
